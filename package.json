@@ -1,0 +1,15 @@
+{
+  "name": "mini-md-example",
+  "version": "0.1.0",
+  "description": "A small Electron application to open/display a markdown file",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "ace-builds": "^1.2.2",
+    "electron-prebuilt": "^0.37.7", 
+    "marked": "^0.3.5",
+    "electron-default-menu": "^0.2.0"
+  }
+}

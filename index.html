@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+	</style>
+ 
+	</head>
+	<body>
+
+		<div id="content">This is a __markdown__ toy that uses [marked](https://www.npmjs.com/package/marked) to view a file. 
+		<br/>To-do: incorporate the newer safer markdown module [markdown-it](https://www.npmjs.com/package/markdown-it).</div>
+ 		<script src="./node_modules/ace-builds/src-min/ace.js" charset="utf-8"></script>
+		<script>
+		 	require('./kyles-custom-menu.js')
+	 		// stndard node modules
+			const path = require('path')
+			const fs = require('fs')
+
+			const marked = require('marked')
+			let defcont = document.getElementById('content').innerHTML
+			document.getElementById('content').innerHTML = marked(defcont)
+			const ipc = require('electron').ipcRenderer
+
+			ipc.on('file-open', function( event, files) {
+			var fPath = files[0]
+			var fName = path.basename(fPath)
+			var fData = fs.readFileSync(fPath, 'utf8')					
+	 									
+			document.getElementById('content').innerHTML = marked(fData)  	 
+			})
+
+			ipc.on('view-toggle', function() {
+			  var editor = ace.edit('content');
+			  editor.setTheme('ace/theme/monokai');
+			  editor.getSession().setMode('ace/mode/markdown');	 
+
+			})
+		</script>			    
+	</body>
+</html>
