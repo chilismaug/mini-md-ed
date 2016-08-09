@@ -21,7 +21,7 @@ function createWindow () {
   win.loadURL(`file://${__dirname}/index.html`)
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+ // win.webContents.openDevTools()
 
   // Emitted when the window is closed.
   win.on('closed', function () {
@@ -62,5 +62,13 @@ ipcMain.on('open-file-dialog', function (event) {
   }, function (files) {
     if (files) event.sender.send('file-open', files)
   })
+})
+
+ipcMain.on('view-md', function () {
+	win.webContents.send('view-md');
+})
+
+ipcMain.on('view-ace', function () {
+	win.webContents.send('view-ace');
 })
 

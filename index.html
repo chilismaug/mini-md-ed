@@ -1,40 +1,72 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<style type="text/css">
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editorzone { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+	.preview {
+			background-color: white;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+		overflow:auto; 
+		z-index:10; 
+	}
+
 	</style>
- 
-	</head>
-	<body>
+</head>
+<body>
+<div id="editorzone">This is a __markdown__ toy that uses [marked](https://www.npmjs.com/package/marked) to view a file.
+<br/>To-do: incorporate the newer safer markdown module [markdown-it](https://www.npmjs.com/package/markdown-it).</div>
 
-		<div id="content">This is a __markdown__ toy that uses [marked](https://www.npmjs.com/package/marked) to view a file. 
-		<br/>To-do: incorporate the newer safer markdown module [markdown-it](https://www.npmjs.com/package/markdown-it).</div>
- 		<script src="./node_modules/ace-builds/src-min/ace.js" charset="utf-8"></script>
-		<script>
-		 	require('./kyles-custom-menu.js')
-	 		// stndard node modules
-			const path = require('path')
-			const fs = require('fs')
+<script src="./node_modules/ace-builds/src-min/ace.js" type="text/javascript" charset="utf-8"></script> 
+<script>
+	require('./kyles-custom-menu.js')
 
-			const marked = require('marked')
-			let defcont = document.getElementById('content').innerHTML
-			document.getElementById('content').innerHTML = marked(defcont)
-			const ipc = require('electron').ipcRenderer
+	// standard node modules
+	const path 	= require('path')
+	const fs 	= require('fs')
+	const ipc 	= require('electron').ipcRenderer			
+	const marked = require('marked')
+			
+	var editor = ace.edit('editorzone')
+	editor.setTheme('ace/theme/monokai')
+	editor.getSession().setMode('ace/mode/markdown')
+	content = editor.getValue()  
+	
+	ipc.on('file-open', function( event, files) {
+		var fPath = files[0] 
+		var fData = fs.readFileSync(fPath, 'utf8')	
+		document.getElementById('editorzone').innerHTML  = fData 	
+		content = fData
+		var editor = ace.edit('editorzone')
+		editor.setTheme('ace/theme/monokai')
+		editor.getSession().setMode('ace/mode/markdown')		
+	})
 
-			ipc.on('file-open', function( event, files) {
-			var fPath = files[0]
-			var fName = path.basename(fPath)
-			var fData = fs.readFileSync(fPath, 'utf8')					
-	 									
-			document.getElementById('content').innerHTML = marked(fData)  	 
-			})
+	ipc.on('view-md', function() {	
+//	 	var content = document.getElementById('editorzone').innerHTML	
+		document.getElementById('editorzone').innerHTML = marked(content)	
+		document.getElementById('editorzone').classList.toggle('preview')	
 
-			ipc.on('view-toggle', function() {
-			  var editor = ace.edit('content');
-			  editor.setTheme('ace/theme/monokai');
-			  editor.getSession().setMode('ace/mode/markdown');	 
-
-			})
-		</script>			    
-	</body>
-</html>
+	})
+	
+	ipc.on('view-ace', function() {	
+		  document.getElementById('editorzone').innerHTML = content
+		 var editor = ace.edit('editorzone')		
+		editor.setTheme("ace/theme/monokai")
+		editor.getSession().setMode("ace/mode/markdown")
+	})	
+</script>	
+		
+</body>
+</html> 
