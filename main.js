@@ -5,7 +5,7 @@ const app = electron.app
 const {BrowserWindow}  = electron;
 const {ipcMain}  = electron;
 //plain old node modules
-const dialog = require('dialog') 
+const dialog = require('dialog')
 const path = require('path')
 const fs = require('fs')
 
@@ -53,9 +53,9 @@ app.on('activate', function () {
     createWindow()
   }
 })
- 
+
   console.log('in main, ipc open-file-dialog declare is next up' )
-   
+
 ipcMain.on('open-file-dialog', function (event) {
   dialog.showOpenDialog({
     properties: ['openFile']
@@ -65,10 +65,9 @@ ipcMain.on('open-file-dialog', function (event) {
 })
 
 ipcMain.on('view-md', function () {
-	win.webContents.send('view-md');
+	win.webContents.send('view-md')
 })
 
 ipcMain.on('view-ace', function () {
-	win.webContents.send('view-ace');
+	win.webContents.send('view-ace')
 })
-
